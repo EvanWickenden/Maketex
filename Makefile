@@ -22,6 +22,6 @@ clean:
 	rm -rf maketex.dSYM
 
 install: default
-	sudo cp -f ./maketex $(DIR)
+	cp -f ./maketex $(DIR)
 
 

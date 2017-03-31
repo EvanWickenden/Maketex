@@ -21,13 +21,15 @@ void logger(const char *msg);
 int main(int argc, char **argv)
 {
 
-  if (argc != 2)
+  if (argc < 2 || argc > 3)
   {
-    fprintf(stderr, "usage: ./maketex <filename.tex | filename>\n");
+    fprintf(stderr, "usage: ./maketex <filename.tex | filename> [text-editor]\n");
     exit(1);
   }
 
   int fd, n, out;
+
+  char * const editor = (argc == 2) ? "vim" : argv[3];
 
   char * const namebuf = malloc(strlen(argv[1]) + 1);
   if (namebuf == NULL)
@@ -74,8 +76,7 @@ int main(int argc, char **argv)
   {
     close(fd);
     close(out);
-    char *script = "vim";
-    execlp(script, script, namebuf, pdflatex_out_buf, (char *) 0);
+    execlp(editor, editor, namebuf, pdflatex_out_buf, (char *) 0);
     die("execl() returned");
   }
 

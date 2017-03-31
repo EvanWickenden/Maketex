@@ -15,7 +15,7 @@ Upon each write within vim, pdflatex will be run in the background and the resul
 
 In fact, the shell script maketex.sh will be run upon each vim save, meaning behaviour can be easily customized. 
 
-
+vim is the default editor used with this program, but editors can also be specified on the command line. 
 
 
 #### INSTALLATION #####
@@ -36,7 +36,7 @@ The installation directory can be set manually within 'Makefile'.
 
 #### USAGE #####
 
-$   maketex <filename>
+$   maketex <filename> [text-editor]
 
 <filename> can either end in ".tex" or not; if it does not, ".tex" will be appended.  
 
@@ -46,7 +46,7 @@ This file will also be opened in the same vim session. It is reachable, within v
 
 This file will be automatically cleaned up upon maketex session termination.
 
-
+If text-editor is not specified, then vim will be used. 
 
 
 #### DEPENDENCIES #####
