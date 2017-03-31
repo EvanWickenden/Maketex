@@ -1,15 +1,16 @@
 
 CC = gcc
 
-CFLAGS = -g -Wall $(EDITOR) $(LOG) 
+CFLAGS = -g -Wall -D \"$(EDITOR)\" $(LOG) 
 LDFLAGS = -g 
 
-LOG =
-
 # replace 'vim' with choice of editor
-EDITOR = -D __EDITOR__=\"vim\"
+EDITOR = vim
 
 DIR = /usr/local/bin
+
+# leave empty 
+LOG =
 
 .PHONY: default clean log install
 
