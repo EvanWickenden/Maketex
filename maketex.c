@@ -29,7 +29,8 @@ int main(int argc, char **argv)
 
   int fd, n, out;
 
-  char * const editor = (argc == 2) ? "vim" : argv[3];
+  /* __EDITOR__ defined in Makefile */
+  char * const editor = (argc == 2) ? __EDITOR__  : argv[3];
 
   char * const namebuf = malloc(strlen(argv[1]) + 1);
   if (namebuf == NULL)

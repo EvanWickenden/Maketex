@@ -1,12 +1,15 @@
 
-CC=gcc
+CC = gcc
 
-CFLAGS=-g -Wall $(DEF) 
-LDFLAGS=-g 
+CFLAGS = -g -Wall $(EDITOR) $(LOG) 
+LDFLAGS = -g 
 
-DEF=
+LOG =
 
-DIR=/usr/local/bin
+# replace 'vim' with choice of editor
+EDITOR = -D __EDITOR__=\"vim\"
+
+DIR = /usr/local/bin
 
 .PHONY: default clean log install
 
@@ -14,7 +17,7 @@ default: maketex
 
 maketex:
 
-log: DEF = -D __LOG__=1
+log: DEF = __LOG__=1
 log: clean maketex
 
 clean:
