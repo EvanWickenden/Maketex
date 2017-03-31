@@ -1,11 +1,12 @@
 
 CC=gcc
 
-CFLAGS=-g -Wall $(DEF) $(INCLUDES) 
+CFLAGS=-g -Wall $(DEF) 
 LDFLAGS=-g 
 
-INCLUDES=
 DEF=
+
+DIR=/usr/local/bin
 
 .PHONY: default clean log install
 
@@ -21,6 +22,6 @@ clean:
 	rm -rf maketex.dSYM
 
 install: default
-	sudo cp -f ./maketex /usr/local/bin/
+	sudo cp -f ./maketex $(DIR)
 
 

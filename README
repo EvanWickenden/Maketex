@@ -29,7 +29,7 @@ To install with debuging enabled
 $   make debug
 $   sudo make install
 
-The installation directory can be set manually within Makefile.
+The installation directory can be set manually within 'Makefile'.
 
 
 
