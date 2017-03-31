@@ -14,7 +14,6 @@
 #include <sys/event.h>
 
 
-void vim_session_over(int);
 void die(const char *msg);
 void logger(const char *msg);
 
@@ -28,8 +27,12 @@ int main(int argc, char **argv)
     exit(1);
   }
 
-  int strln = strlen(argv[1]), fd, n, out;
-  char namebuf[strln + 5];
+  int fd, n, out;
+
+  char * const namebuf = malloc(strlen(argv[1]) + 1);
+  if (namebuf == NULL)
+    die("malloc() returned NULL");
+
   char *dot = namebuf, *pdflatex_out_buf;
 
   {
@@ -96,9 +99,6 @@ int main(int argc, char **argv)
     {
       int pid, fd[2];
 
-      logger("should be about to execute maketex");
-      logger(pdflatex_out_buf);
-
       if (pipe(fd) < 0)
         die("pipe() failed");
 
@@ -108,12 +108,10 @@ int main(int argc, char **argv)
 
       if (pid == 0)
       {
-        /* child */
         char *script = "/Users/evanwynnwickenden/maketex/maketex.sh";
 
         close(fd[1]);
         dup2(fd[0], STDIN_FILENO);
-        /* handle output redirection in shell script */
         lseek(out, 0, SEEK_SET); /* overwrite current file-data */
         dup2(out, STDOUT_FILENO);
         dup2(out, STDERR_FILENO);
@@ -127,12 +125,11 @@ int main(int argc, char **argv)
 
       /* parent */
       close(fd[0]);
-      write(fd[1], "q\r\n", 4); /* kill pdflatex if error */
+      write(fd[1], "q\r\n", 4); /* kill pdflatex if error; no effect if no error */
       close(fd[1]);
       waitpid(pid, NULL, 0);
     }
   }
-
 
 
   waitpid(pid, NULL, 0);
@@ -171,6 +168,7 @@ void logger(const char *msg)
   fflush(fp);
 #endif
 }
+
 
 void die(const char *msg)
 {
