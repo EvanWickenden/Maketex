@@ -1,7 +1,7 @@
 
 CC = gcc
 
-CFLAGS = -g -Wall -D \"$(EDITOR)\" $(LOG) 
+CFLAGS = -g -Wall -D __EDITOR__=\"$(EDITOR)\" $(LOG) 
 LDFLAGS = -g 
 
 # replace 'vim' with choice of editor

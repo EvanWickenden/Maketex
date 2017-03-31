@@ -9,7 +9,7 @@ Maketex
 
 #### OVERVIEW #####
 
-This program is used as a wrapper around a vim session working on tex files;
+This program is used as a wrapper around a vim session working on a tex file;
 
 Upon each write within vim, pdflatex will be run in the background and the resulting .pdf file will be opened;
 
@@ -44,6 +44,7 @@ $   maketex <filename> [text-editor]
 The output of pdflatex will be redirected into pdflatex-out-<filename>, so that any errors pdflatex encounters can be easily determined.  This file will also be opened in the same vim session. It is reachable, within vim, by |:bn|.  This file will be automatically cleaned up upon maketex session termination.  
 
 If [text-editor] is not provided, then the editor defined in Makefile (vim by default) we be used. 
+
 
 
 #### DEPENDENCIES #####
