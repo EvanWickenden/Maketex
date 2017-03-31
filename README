@@ -22,12 +22,12 @@ In fact, the shell script maketex.sh will be run upon each vim save, meaning beh
 
 To make and copy executable to /usr/local/bin/ 
 
-$   sudo make install 
+$   make install 
 
 To install with debuging enabled
 
 $   make debug
-$   sudo make install
+$   make install
 
 The installation directory can be set manually within 'Makefile'.
 
