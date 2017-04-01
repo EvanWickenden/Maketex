@@ -29,8 +29,8 @@ int main(int argc, char **argv)
 
   int fd, n, out;
 
-  /* __EDITOR__ defined in Makefile */
-  char * const editor = (argc == 2) ? __EDITOR__  : argv[3];
+  /* __EDITOR__ provided in Makefile */
+  char * const editor = (argc == 2) ? __EDITOR__  : argv[2];
 
   char * const namebuf = malloc(strlen(argv[1]) + 1);
   if (namebuf == NULL)
@@ -99,10 +99,7 @@ int main(int argc, char **argv)
     if (event_buf[0].flags & EV_ERROR) break;
     if (!(event_buf[0].flags & EV_EOF))
     {
-      int pid, fd[2];
-
-      if (pipe(fd) < 0)
-        die("pipe() failed");
+      int pid;
 
       pid = fork();
       if (pid < 0)
@@ -112,8 +109,6 @@ int main(int argc, char **argv)
       {
         char *script = "/Users/evanwynnwickenden/maketex/maketex.sh";
 
-        close(fd[1]);
-        dup2(fd[0], STDIN_FILENO);
         lseek(out, 0, SEEK_SET); /* overwrite current file-data */
         dup2(out, STDOUT_FILENO);
         dup2(out, STDERR_FILENO);
@@ -125,10 +120,6 @@ int main(int argc, char **argv)
         die("execl() returned");
       }
 
-      /* parent */
-      close(fd[0]);
-      write(fd[1], "q\r\n", 4); /* kill pdflatex if error; no effect if no error */
-      close(fd[1]);
       waitpid(pid, NULL, 0);
     }
   }
