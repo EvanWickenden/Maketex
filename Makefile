@@ -1,7 +1,7 @@
 
 CC = gcc
 
-CFLAGS = -g -Wall -D __EDITOR__=\"$(EDITOR)\" $(LOG) 
+CFLAGS = -g -Wall -D__EDITOR__=\"$(EDITOR)\" $(LOG) 
 LDFLAGS = -g 
 
 # replace 'vim' with choice of editor
@@ -18,7 +18,7 @@ default: maketex
 
 maketex:
 
-log: DEF = __LOG__=1
+log: LOG=-D__LOG__
 log: clean maketex
 
 clean:

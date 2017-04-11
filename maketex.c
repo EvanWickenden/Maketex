@@ -30,9 +30,17 @@ int main(int argc, char **argv)
   int fd, n, out;
 
   /* __EDITOR__ provided in Makefile */
+#ifdef __EDITOR__
   char * const editor = (argc == 2) ? __EDITOR__  : argv[2];
+#else
+  char * const editor = argv[2];
+  fprintf(stderr, "No editor provided in build, must provide command line argument;\n"
+          "usage: ./maketex <filename.tex | filename> <text-editor>\n");
+#endif
+
 
   char * const namebuf = malloc(strlen(argv[1]) + 1);
+
   if (namebuf == NULL)
     die("malloc() returned NULL");
 
