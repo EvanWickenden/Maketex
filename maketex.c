@@ -73,7 +73,7 @@ int main(int argc, char **argv)
   pdflatex_out_buf[n] = '\0';
   *dot = '.'; /* return extension */
 
-  out = open(pdflatex_out_buf, O_CREAT | O_WRONLY | O_TRUNC);
+  out = open(pdflatex_out_buf, O_CREAT | O_WRONLY | O_TRUNC, 0444);
   if (out < 0)
     die("open() out failed");
 
