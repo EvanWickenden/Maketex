@@ -121,11 +121,10 @@ int main(int argc, char **argv)
     if (event_buf[0].flags & EV_ERROR) break;
     if (!(event_buf[0].flags & EV_EOF))
     {
-      int pid;
+      int pid = fork();
 
-      pid = fork();
       if (pid < 0)
-        die("fork() failed"); /* more graceful exit */
+        die("fork() failed"); /* exit more gracefully */
 
       if (pid == 0)
       {
