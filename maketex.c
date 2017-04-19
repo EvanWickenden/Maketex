@@ -18,29 +18,38 @@ void die(const char *msg);
 void logger(const char *msg);
 
 
+#ifdef __LOG__
+#define LOGGER(x)   logger(x)
+#else
+#define LOGGER(x)   ;
+#endif
+
+
 int main(int argc, char **argv)
 {
-
-  if (argc < 2 || argc > 3)
-  {
-    fprintf(stderr, "usage: ./maketex <filename.tex | filename> [text-editor]\n");
-    exit(1);
-  }
 
   int fd, n, out;
 
   /* __EDITOR__ provided in Makefile */
 #ifdef __EDITOR__
+  if (argc < 2 || argc > 3)
+  {
+    fprintf(stderr, "usage: ./maketex <filename.tex | filename> [text-editor]\n");
+    exit(1);
+  }
   char * const editor = (argc == 2) ? __EDITOR__  : argv[2];
 #else
+  if (argc != 3)
+  {
+      fprintf(stderr, "No editor provided in build, must provide command line argument;\n"
+              "usage: ./maketex <filename.tex | filename> <text-editor>\n");
+      exit(1);
+  }
   char * const editor = argv[2];
-  fprintf(stderr, "No editor provided in build, must provide command line argument;\n"
-          "usage: ./maketex <filename.tex | filename> <text-editor>\n");
 #endif
 
 
-  char * const namebuf = malloc(strlen(argv[1]) + 1);
-
+  char * const namebuf = malloc(strlen(argv[1]) + 5);
   if (namebuf == NULL)
     die("malloc() returned NULL");
 
@@ -60,10 +69,13 @@ int main(int argc, char **argv)
   }
   /* namebuf is always filename.tex; dot is pointer to dot in ".tex" */
 
+
   /* open beforehand to ensure permissions */
   fd = open(namebuf, O_CREAT | O_EVTONLY, 0644); 
   if (fd < 0)
     die("open() failed");
+  unlink(namebuf); /* allow vim user to set permanence of this file */
+
 
   *dot = '\0'; /* trim extension */
   pdflatex_out_buf = malloc(20 + strlen(namebuf));
@@ -73,14 +85,16 @@ int main(int argc, char **argv)
   pdflatex_out_buf[n] = '\0';
   *dot = '.'; /* return extension */
 
+
   out = open(pdflatex_out_buf, O_CREAT | O_WRONLY | O_TRUNC, 0444);
   if (out < 0)
     die("open() out failed");
+  unlink(pdflatex_out_buf); /* destroy file even in case of crash */
+
 
   pid_t pid = fork();
   if (pid < 0)
     die("fork() failed");
-
   if (pid == 0) 
   {
     close(fd);
@@ -103,7 +117,7 @@ int main(int argc, char **argv)
 
   while ((err = kevent(kq, event, 2, event_buf, 2, NULL)) > 0)
   {
-    logger("an event has occured");
+    LOGGER("an event has occured");
     if (event_buf[0].flags & EV_ERROR) break;
     if (!(event_buf[0].flags & EV_EOF))
     {
@@ -122,7 +136,7 @@ int main(int argc, char **argv)
         dup2(out, STDERR_FILENO);
         *dot = '\0'; /* trim extension */
   
-        logger("about to execl");
+        LOGGER("about to execl");
 
         execl(script, script, namebuf, (char *) 0);
         die("execl() returned");
@@ -135,14 +149,12 @@ int main(int argc, char **argv)
 
   waitpid(pid, NULL, 0);
 
-  logger("we are terminating\n");
+  LOGGER("we are terminating\n");
 
-  unlink(pdflatex_out_buf);
   free(pdflatex_out_buf);
 
   printf("terminating maketex session.\n");
 
-  /* cleanup and exit */
   return 0;
 }
 
@@ -150,7 +162,6 @@ int main(int argc, char **argv)
 
 void logger(const char *msg)
 {
-#ifdef __LOG__
   static int init = 0;
   static FILE *fp;
   if (init == 0)
@@ -165,15 +176,13 @@ void logger(const char *msg)
         "--------------------------------\n"
         "new log session\n");
   }
-  fprintf(fp, "%s\n", msg);
   fflush(fp);
-#endif
 }
 
 
 void die(const char *msg)
 {
-  logger(msg);
+  LOGGER(msg);
 //  fprintf(stderr, "%s\n", msg);
   exit(1);
 }
