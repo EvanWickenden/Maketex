@@ -74,7 +74,6 @@ int main(int argc, char **argv)
   fd = open(namebuf, O_CREAT | O_EVTONLY, 0644); 
   if (fd < 0)
     die("open() failed");
-  unlink(namebuf); /* allow vim user to set permanence of this file */
 
 
   *dot = '\0'; /* trim extension */

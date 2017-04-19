@@ -2,7 +2,7 @@
 CC = gcc
 
 CFLAGS = -g -Wall -Werror -Wpedantic -D__EDITOR__=\"$(EDITOR)\" $(LOG) 
-LDFLAGS = -g 
+LDFLAGS = 
 
 # replace 'vim' with choice of editor
 EDITOR = vim
