@@ -88,7 +88,6 @@ int main(int argc, char **argv)
   out = open(pdflatex_out_buf, O_CREAT | O_WRONLY | O_TRUNC, 0444);
   if (out < 0)
     die("open() out failed");
-  unlink(pdflatex_out_buf); /* destroy file even in case of crash */
 
 
   pid_t pid = fork();
@@ -102,10 +101,13 @@ int main(int argc, char **argv)
     die("execl() returned");
   }
 
-  
   /* parent */
+
   int kq, err;
   struct kevent event[2], event_buf[2]; 
+
+  sleep(1); /* 1 second offset not harmful; ensure vim doesn't create new inode */
+  unlink(pdflatex_out_buf); /* file will be destroyed even in case of irregular termination */
 
   EV_SET(event, pid, EVFILT_PROC, EV_ADD | EV_CLEAR, NOTE_EXIT, 0, NULL);
   EV_SET(event + 1, fd, EVFILT_VNODE, EV_ADD | EV_CLEAR, NOTE_WRITE, 0, NULL);
