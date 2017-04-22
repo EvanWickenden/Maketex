@@ -106,9 +106,6 @@ int main(int argc, char **argv)
   int kq, err;
   struct kevent event[2], event_buf[2]; 
 
-//  sleep(1); /* 1 second offset not harmful; ensure vim doesn't create new inode */
-//  unlink(pdflatex_out_buf); /* file will be destroyed even in case of irregular termination */
-
   EV_SET(event, pid, EVFILT_PROC, EV_ADD | EV_CLEAR, NOTE_EXIT, 0, NULL);
   EV_SET(event + 1, fd, EVFILT_VNODE, EV_ADD | EV_CLEAR, NOTE_WRITE, 0, NULL);
 
@@ -151,6 +148,7 @@ int main(int argc, char **argv)
 
   LOGGER("we are terminating\n");
 
+  unlink(pdflatex_out_buf); /* file will be destroyed even in case of irregular termination */
   free(pdflatex_out_buf);
 
   printf("terminating maketex session.\n");
