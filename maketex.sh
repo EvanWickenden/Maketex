@@ -2,7 +2,8 @@
 
 die=0
 
-pdflatex -halt-on-error $1.tex || die=1
+
+pdflatex $1.tex || die=1
 
 echo $'\n\n\n\n\n\n _____ pdflatex output completed _____ \n\n\n\n\n\n'
 
