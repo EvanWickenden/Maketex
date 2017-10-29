@@ -27,7 +27,7 @@ $   make install
 
 To install with debuging enabled
 
-$   make debug
+$   make log
 $   make install
 
 The installation directory can be set manually within 'Makefile'.

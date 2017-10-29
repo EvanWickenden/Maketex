@@ -1,7 +1,8 @@
 
 CC = gcc
 
-CFLAGS = -g -Wall -Werror -Wpedantic -D__EDITOR__=\"$(EDITOR)\" $(LOG) 
+
+CFLAGS = -Wall -Werror -Wpedantic -D__EDITOR__=\"$(EDITOR)\" -D__SCRIPT_DIR__=\"$(CDIR)\" $(LOG) 
 LDFLAGS = 
 
 # replace 'vim' with choice of editor
@@ -9,6 +10,9 @@ EDITOR = vim
 
 # replace with prefered installation directory
 DIR = /usr/local/bin
+
+# directory containing maketex.sh -- this directory by default
+CDIR = $(shell pwd)
 
 # leave empty 
 LOG =
@@ -30,6 +34,7 @@ clean:
 	rm -rf maketex.dSYM
 
 install: default
-	ln -f ./maketex $(DIR)
+	cp maketex $(DIR)
+#	ln -f ./maketex $(DIR)
 
 

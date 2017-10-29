@@ -28,7 +28,13 @@ void logger(const char *msg);
 int main(int argc, char **argv)
 {
 
+		LOGGER("entering main function");
+
     int fd, n, out;
+
+#ifndef __SCRIPT_DIR__
+		die("no script directory provided");
+#endif
 
     /* __EDITOR__ provided in Makefile */
 #ifdef __EDITOR__
@@ -103,6 +109,8 @@ int main(int argc, char **argv)
 
     /* parent */
 
+		LOGGER("entering write loop");
+
     int kq, err;
     struct kevent event[2], event_buf[2]; 
 
@@ -132,7 +140,7 @@ int main(int argc, char **argv)
 
             if (pid == 0)
             {
-                char *script = "/Users/evanwynnwickenden/maketex/maketex.sh";
+                char *script = __SCRIPT_DIR__ "/maketex.sh";
 
                 close(fd[1]); 
 
@@ -143,6 +151,7 @@ int main(int argc, char **argv)
                 *dot = '\0'; /* trim extension */
 
                 LOGGER("about to execl");
+								LOGGER(script);
 
                 execl(script, script, namebuf, (char *) 0);
                 die("execl() returned");
@@ -193,6 +202,7 @@ void logger(const char *msg)
                 "--------------------------------\n"
                 "new log session\n");
     }
+		fprintf(fp, "%s\n", msg);
     fflush(fp);
 }
 
@@ -200,7 +210,7 @@ void logger(const char *msg)
 void die(const char *msg)
 {
     LOGGER(msg);
-    //  fprintf(stderr, "%s\n", msg);
+//		fprintf(stderr, "%s\n", msg);
     exit(1);
 }
 
